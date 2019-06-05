@@ -1,0 +1,434 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Country`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Country` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Country` (
+  `CountryCode` INT NOT NULL,
+  `CountryName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`CountryCode`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Airline`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Airline` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Airline` (
+  `AirlineID` CHAR(2) NOT NULL,
+  `CountryHome` INT NOT NULL,
+  `Phone` VARCHAR(45) NOT NULL,
+  `Fax` VARCHAR(45) NULL,
+  `Website` VARCHAR(45) NULL,
+  PRIMARY KEY (`AirlineID`),
+  INDEX `fk_Airline_Country_idx` (`CountryHome` ASC),
+  CONSTRAINT `fk_Airline_Country`
+    FOREIGN KEY (`CountryHome`)
+    REFERENCES `mydb`.`Country` (`CountryCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Model`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Model` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Model` (
+  `ModelCode` VARCHAR(4) NOT NULL,
+  `MaintenanceID` INT NOT NULL,
+  PRIMARY KEY (`ModelCode`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`SubModel`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`SubModel` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`SubModel` (
+  `SubModelCode` VARCHAR(45) NOT NULL,
+  `ModelCode` VARCHAR(4) NOT NULL,
+  PRIMARY KEY (`SubModelCode`),
+  INDEX `fk_Sub-Model_Model1_idx` (`ModelCode` ASC),
+  CONSTRAINT `fk_Sub-Model_Model1`
+    FOREIGN KEY (`ModelCode`)
+    REFERENCES `mydb`.`Model` (`ModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`PassengerAirliner`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`PassengerAirliner` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`PassengerAirliner` (
+  `PassengerAirlinerID` INT NOT NULL,
+  `SubModelCode` VARCHAR(45) NOT NULL,
+  `MaxPassengers` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`PassengerAirlinerID`),
+  INDEX `fk_PassengerAirliner_SubModel1_idx` (`SubModelCode` ASC),
+  CONSTRAINT `fk_PassengerAirliner_SubModel1`
+    FOREIGN KEY (`SubModelCode`)
+    REFERENCES `mydb`.`SubModel` (`SubModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`CargoFreighter`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`CargoFreighter` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`CargoFreighter` (
+  `CargoFreighterID` INT NOT NULL,
+  `SubModelCode` VARCHAR(45) NOT NULL,
+  `MaxCargoWeight` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`CargoFreighterID`),
+  INDEX `fk_CargoFreighter_SubModel1_idx` (`SubModelCode` ASC),
+  CONSTRAINT `fk_CargoFreighter_SubModel1`
+    FOREIGN KEY (`SubModelCode`)
+    REFERENCES `mydb`.`SubModel` (`SubModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Aircraft`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Aircraft` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Aircraft` (
+  `AircraftID` INT NOT NULL AUTO_INCREMENT,
+  `Reg#` VARCHAR(45) NOT NULL,
+  `SubModelCode` VARCHAR(45) NOT NULL,
+  `MaintenanceID` INT NOT NULL,
+  `PassengerAirlinerID` INT NULL,
+  `CargoFreighterID` INT NULL,
+  PRIMARY KEY (`AircraftID`),
+  INDEX `fk_Aircraft_Airline1_idx` (`Reg#` ASC),
+  INDEX `fk_Aircraft_SubModel1_idx` (`SubModelCode` ASC),
+  INDEX `PassengerAirlinerID1_idx` (`PassengerAirlinerID` ASC),
+  INDEX `CargoFreighterID1_idx` (`CargoFreighterID` ASC),
+  CONSTRAINT `fk_Aircraft_Airline1`
+    FOREIGN KEY (`Reg#`)
+    REFERENCES `mydb`.`Airline` (`AirlineID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Aircraft_SubModel1`
+    FOREIGN KEY (`SubModelCode`)
+    REFERENCES `mydb`.`SubModel` (`SubModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `PassengerAirlinerID1`
+    FOREIGN KEY (`PassengerAirlinerID`)
+    REFERENCES `mydb`.`PassengerAirliner` (`PassengerAirlinerID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `CargoFreighterID1`
+    FOREIGN KEY (`CargoFreighterID`)
+    REFERENCES `mydb`.`CargoFreighter` (`CargoFreighterID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`EngineModel`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`EngineModel` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`EngineModel` (
+  `EngineModelID` INT NOT NULL,
+  `SubModelCode` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`EngineModelID`),
+  INDEX `SubModelID2_idx` (`SubModelCode` ASC),
+  CONSTRAINT `SubModelID2`
+    FOREIGN KEY (`SubModelCode`)
+    REFERENCES `mydb`.`SubModel` (`SubModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Engine`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Engine` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Engine` (
+  `EngineModel` VARCHAR(45) NOT NULL,
+  `AircraftID` INT NOT NULL,
+  `EngineModelID` INT NOT NULL,
+  PRIMARY KEY (`EngineModel`),
+  INDEX `AircraftID2_idx` (`AircraftID` ASC),
+  INDEX `EngineModelID1_idx` (`EngineModelID` ASC),
+  CONSTRAINT `AircraftID2`
+    FOREIGN KEY (`AircraftID`)
+    REFERENCES `mydb`.`Aircraft` (`AircraftID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `EngineModelID1`
+    FOREIGN KEY (`EngineModelID`)
+    REFERENCES `mydb`.`EngineModel` (`EngineModelID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Technician`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Technician` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Technician` (
+  `EmployeeID` INT NOT NULL AUTO_INCREMENT,
+  `SupervisorID` INT NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `Phone` VARCHAR(45) NOT NULL,
+  `Salary` VARCHAR(45) NOT NULL,
+  `LoginName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`EmployeeID`),
+  INDEX `TechnicianID2_idx` (`SupervisorID` ASC),
+  CONSTRAINT `TechnicianID2`
+    FOREIGN KEY (`SupervisorID`)
+    REFERENCES `mydb`.`Technician` (`EmployeeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Model_has_Technician`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Model_has_Technician` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Model_has_Technician` (
+  `Model_ModelCode` VARCHAR(4) NOT NULL,
+  `EmployeeID` INT NOT NULL,
+  PRIMARY KEY (`Model_ModelCode`, `EmployeeID`),
+  INDEX `fk_Model_has_Technician_Technician1_idx` (`EmployeeID` ASC),
+  INDEX `fk_Model_has_Technician_Model1_idx` (`Model_ModelCode` ASC),
+  CONSTRAINT `fk_Model_has_Technician_Model1`
+    FOREIGN KEY (`Model_ModelCode`)
+    REFERENCES `mydb`.`Model` (`ModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Model_has_Technician_Technician1`
+    FOREIGN KEY (`EmployeeID`)
+    REFERENCES `mydb`.`Technician` (`EmployeeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Test`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Test` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Test` (
+  `CASA#` INT NOT NULL,
+  `MaintenanceID` INT NOT NULL,
+  PRIMARY KEY (`CASA#`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`TestEvent`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`TestEvent` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`TestEvent` (
+  `TestEventNo` INT NOT NULL AUTO_INCREMENT,
+  `AircraftID` INT NULL,
+  `CASA#` INT NOT NULL,
+  `PreviousTestEventID` INT NULL,
+  `TestDesc` VARCHAR(45) NOT NULL,
+  `StartDateTime` DATE NOT NULL,
+  `EndDateTime` DATE NULL,
+  `HoursSpentOnTesting` INT NULL,
+  `TestResult` VARCHAR(45) NULL,
+  `ResultComments` VARCHAR(45) NULL,
+  `EmployeeID` INT NOT NULL,
+  PRIMARY KEY (`TestEventNo`),
+  INDEX `AircraftID1_idx` (`AircraftID` ASC),
+  INDEX `TestID1_idx` (`CASA#` ASC),
+  INDEX `TestEventID1_idx` (`PreviousTestEventID` ASC),
+  INDEX `TechnicianID4_idx` (`EmployeeID` ASC),
+  CONSTRAINT `AircraftID1`
+    FOREIGN KEY (`AircraftID`)
+    REFERENCES `mydb`.`Aircraft` (`AircraftID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `TestID1`
+    FOREIGN KEY (`CASA#`)
+    REFERENCES `mydb`.`Test` (`CASA#`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `TestEventID1`
+    FOREIGN KEY (`PreviousTestEventID`)
+    REFERENCES `mydb`.`TestEvent` (`TestEventNo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `TechnicianID4`
+    FOREIGN KEY (`EmployeeID`)
+    REFERENCES `mydb`.`Technician` (`EmployeeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`TestItem`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`TestItem` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`TestItem` (
+  `TestItemCode` INT NOT NULL,
+  `CASA#` INT NOT NULL,
+  `ItemDesc` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`TestItemCode`),
+  INDEX `TestID2_idx` (`CASA#` ASC),
+  CONSTRAINT `TestID2`
+    FOREIGN KEY (`CASA#`)
+    REFERENCES `mydb`.`Test` (`CASA#`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`TestEvent_has_TestItem`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`TestEvent_has_TestItem` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`TestEvent_has_TestItem` (
+  `TestEventNo` INT NOT NULL,
+  `Code` INT NOT NULL,
+  PRIMARY KEY (`TestEventNo`, `Code`),
+  INDEX `TestItemID1_idx` (`Code` ASC),
+  INDEX `TestEventID2_idx` (`TestEventNo` ASC),
+  CONSTRAINT `TestEventID2`
+    FOREIGN KEY (`TestEventNo`)
+    REFERENCES `mydb`.`TestEvent` (`TestEventNo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `TestItemID1`
+    FOREIGN KEY (`Code`)
+    REFERENCES `mydb`.`TestItem` (`TestItemCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Manager`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Manager` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Manager` (
+  `EmployeeID` INT NOT NULL,
+  `TeamName` VARCHAR(45) NULL,
+  `DateStart` DATETIME NOT NULL,
+  PRIMARY KEY (`EmployeeID`),
+  INDEX `TechnicianID1_idx` (`EmployeeID` ASC),
+  CONSTRAINT `TechnicianID1`
+    FOREIGN KEY (`EmployeeID`)
+    REFERENCES `mydb`.`Technician` (`EmployeeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Address`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Address` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`Address` (
+  `AirlineID` CHAR(2) NOT NULL,
+  `Street` VARCHAR(45) NOT NULL,
+  `Suburb` VARCHAR(45) NOT NULL,
+  `Postcode` VARCHAR(45) NOT NULL,
+  `State` VARCHAR(45) NOT NULL,
+  `CountryName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`AirlineID`),
+  CONSTRAINT `AirlineID1`
+    FOREIGN KEY (`AirlineID`)
+    REFERENCES `mydb`.`Airline` (`AirlineID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`SubModelAttributes`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`SubModelAttributes` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`SubModelAttributes` (
+  `SubModelCode` VARCHAR(45) NOT NULL,
+  `Width` VARCHAR(45) NOT NULL,
+  `Length` VARCHAR(45) NOT NULL,
+  `Height` VARCHAR(45) NOT NULL,
+  `WingSpan` VARCHAR(45) NOT NULL,
+  `NetWeight` VARCHAR(45) NOT NULL,
+  `MaxSpeed` VARCHAR(45) NOT NULL,
+  `MaxRange` VARCHAR(45) NOT NULL,
+  `TakeOffDistance` VARCHAR(45) NOT NULL,
+  `LandingDistance` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`SubModelCode`),
+  CONSTRAINT `SubModelID1`
+    FOREIGN KEY (`SubModelCode`)
+    REFERENCES `mydb`.`SubModel` (`SubModelCode`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`TechnicianAddress`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`TechnicianAddress` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`TechnicianAddress` (
+  `EmployeeID` INT NOT NULL,
+  `Street` VARCHAR(45) NOT NULL,
+  `Suburb` VARCHAR(45) NOT NULL,
+  `Postcode` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`EmployeeID`),
+  CONSTRAINT `TechnicianID3`
+    FOREIGN KEY (`EmployeeID`)
+    REFERENCES `mydb`.`Technician` (`EmployeeID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
