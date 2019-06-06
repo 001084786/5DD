@@ -20,7 +20,7 @@ USE `mydb` ;
 DROP TABLE IF EXISTS `mydb`.`Country` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Country` (
-  `CountryCode` INT NOT NULL,
+  `CountryCode` VARCHAR(4) NOT NULL,
   `CountryName` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`CountryCode`))
 ENGINE = InnoDB;
@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `mydb`.`Airline` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Airline` (
   `AirlineID` CHAR(2) NOT NULL,
-  `CountryHome` INT NOT NULL,
+  `CountryHome` VARCHAR(4) NOT NULL,
   `Phone` VARCHAR(45) NOT NULL,
   `Fax` VARCHAR(45) NULL,
   `Website` VARCHAR(45) NULL,
@@ -54,7 +54,6 @@ DROP TABLE IF EXISTS `mydb`.`Model` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Model` (
   `ModelCode` VARCHAR(4) NOT NULL,
-  `MaintenanceID` INT NOT NULL,
   PRIMARY KEY (`ModelCode`))
 ENGINE = InnoDB;
 
@@ -122,18 +121,17 @@ DROP TABLE IF EXISTS `mydb`.`Aircraft` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Aircraft` (
   `AircraftID` INT NOT NULL AUTO_INCREMENT,
-  `Reg#` VARCHAR(45) NOT NULL,
+  `RegNo` VARCHAR(45) NOT NULL,
   `SubModelCode` VARCHAR(45) NOT NULL,
-  `MaintenanceID` INT NOT NULL,
   `PassengerAirlinerID` INT NULL,
   `CargoFreighterID` INT NULL,
   PRIMARY KEY (`AircraftID`),
-  INDEX `fk_Aircraft_Airline1_idx` (`Reg#` ASC),
+  INDEX `fk_Aircraft_Airline1_idx` (`RegNo` ASC),
   INDEX `fk_Aircraft_SubModel1_idx` (`SubModelCode` ASC),
   INDEX `PassengerAirlinerID1_idx` (`PassengerAirlinerID` ASC),
   INDEX `CargoFreighterID1_idx` (`CargoFreighterID` ASC),
   CONSTRAINT `fk_Aircraft_Airline1`
-    FOREIGN KEY (`Reg#`)
+    FOREIGN KEY (`RegNo`)
     REFERENCES `mydb`.`Airline` (`AirlineID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -229,6 +227,7 @@ DROP TABLE IF EXISTS `mydb`.`Model_has_Technician` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`Model_has_Technician` (
   `Model_ModelCode` VARCHAR(4) NOT NULL,
   `EmployeeID` INT NOT NULL,
+  `QualifiedDate` DATE NULL,
   PRIMARY KEY (`Model_ModelCode`, `EmployeeID`),
   INDEX `fk_Model_has_Technician_Technician1_idx` (`EmployeeID` ASC),
   INDEX `fk_Model_has_Technician_Model1_idx` (`Model_ModelCode` ASC),
@@ -252,7 +251,6 @@ DROP TABLE IF EXISTS `mydb`.`Test` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Test` (
   `CASA#` INT NOT NULL,
-  `MaintenanceID` INT NOT NULL,
   PRIMARY KEY (`CASA#`))
 ENGINE = InnoDB;
 
@@ -309,12 +307,12 @@ DROP TABLE IF EXISTS `mydb`.`TestItem` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`TestItem` (
   `TestItemCode` INT NOT NULL,
-  `CASA#` INT NOT NULL,
+  `CASA_No` INT NOT NULL,
   `ItemDesc` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`TestItemCode`),
-  INDEX `TestID2_idx` (`CASA#` ASC),
+  INDEX `TestID2_idx` (`CASA_No` ASC),
   CONSTRAINT `TestID2`
-    FOREIGN KEY (`CASA#`)
+    FOREIGN KEY (`CASA_No`)
     REFERENCES `mydb`.`Test` (`CASA#`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
