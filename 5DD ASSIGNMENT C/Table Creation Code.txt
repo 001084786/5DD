@@ -204,11 +204,11 @@ DROP TABLE IF EXISTS `mydb`.`Technician` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`Technician` (
   `EmployeeID` INT NOT NULL AUTO_INCREMENT,
   `SupervisorID` INT NOT NULL,
-  `FirstName` VARCHAR(45) NOT NULL,
-  `LastName` VARCHAR(45) NOT NULL,
-  `Phone` VARCHAR(45) NOT NULL,
+  `FirstName` VARBINARY(250) NOT NULL,
+  `LastName` VARBINARY(250) NOT NULL,
+  `Phone` VARBINARY(250) NOT NULL,
   `Salary` VARCHAR(45) NOT NULL,
-  `LoginName` VARCHAR(45) NOT NULL,
+  `LoginName` VARBINARY(250) NOT NULL,
   PRIMARY KEY (`EmployeeID`),
   INDEX `TechnicianID2_idx` (`SupervisorID` ASC),
   CONSTRAINT `TechnicianID2`
@@ -250,8 +250,8 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`Test` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`Test` (
-  `CASA#` INT NOT NULL,
-  PRIMARY KEY (`CASA#`))
+  `CASA_No` INT NOT NULL,
+  PRIMARY KEY (`CASA_No`))
 ENGINE = InnoDB;
 
 
@@ -263,18 +263,18 @@ DROP TABLE IF EXISTS `mydb`.`TestEvent` ;
 CREATE TABLE IF NOT EXISTS `mydb`.`TestEvent` (
   `TestEventNo` INT NOT NULL AUTO_INCREMENT,
   `AircraftID` INT NULL,
-  `CASA#` INT NOT NULL,
+  `CASA_No` INT NOT NULL,
   `PreviousTestEventID` INT NULL,
   `TestDesc` VARCHAR(45) NOT NULL,
   `StartDateTime` DATE NOT NULL,
   `EndDateTime` DATE NULL,
   `HoursSpentOnTesting` INT NULL,
-  `TestResult` VARCHAR(45) NULL,
+  `TestResult` VARBINARY(250) NULL,
   `ResultComments` VARCHAR(45) NULL,
   `EmployeeID` INT NOT NULL,
   PRIMARY KEY (`TestEventNo`),
   INDEX `AircraftID1_idx` (`AircraftID` ASC),
-  INDEX `TestID1_idx` (`CASA#` ASC),
+  INDEX `TestID1_idx` (`CASA_No` ASC),
   INDEX `TestEventID1_idx` (`PreviousTestEventID` ASC),
   INDEX `TechnicianID4_idx` (`EmployeeID` ASC),
   CONSTRAINT `AircraftID1`
@@ -283,8 +283,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TestEvent` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `TestID1`
-    FOREIGN KEY (`CASA#`)
-    REFERENCES `mydb`.`Test` (`CASA#`)
+    FOREIGN KEY (`CASA_No`)
+    REFERENCES `mydb`.`Test` (`CASA_No`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `TestEventID1`
@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TestItem` (
   INDEX `TestID2_idx` (`CASA_No` ASC),
   CONSTRAINT `TestID2`
     FOREIGN KEY (`CASA_No`)
-    REFERENCES `mydb`.`Test` (`CASA#`)
+    REFERENCES `mydb`.`Test` (`CASA_No`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
