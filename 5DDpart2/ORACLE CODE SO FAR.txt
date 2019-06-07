@@ -56,11 +56,27 @@ ALTER TABLE Airline_table
 
 
 /* CREATE THE Airplane TABLE */
-CREATE TYPE Airplane AS OBJECT (Airline REF Airline, Cargo REF Cargo, Passenger REF Passenger, AirplaneID NUMBER(8), AirplaneName VARCHAR2(25));
+CREATE TYPE Airplane AS OBJECT (Airline REF Airline, Cargo REF Cargo, Passenger REF Passenger, AirplaneId NUMBER(8), AirplaneName VARCHAR2(25));
 /
-
 CREATE TABLE Airplane_table OF Airplane;
 /
+AlTER TABLE Airplane_table
+  ADD (CONSTRAINT AirplaneIdPK PRIMARY KEY (AirlineId));
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
