@@ -124,11 +124,11 @@ SELECT * FROM SubModel_table;
 
 --Cargo
 INSERT INTO Cargo_table VALUES ('111', 'Fast Flight', 'QTFF', 111, 111, 111.00, 111.00, 1000);
---INSERT INTO Cargo_table VALUES ('222', 'Air Wave', 'AIRW', 222, 222, 222.00, 222.00, 2000);
---INSERT INTO Cargo_table VALUES ('333', 'Aero Go', 'AERO', 333, 333, 333.00, 333.00, 3000);
+INSERT INTO Cargo_table VALUES ('444', 'Air Wave', 'AIRW', 222, 222, 222.00, 222.00, 2000);
+INSERT INTO Cargo_table VALUES ('555', 'Aero Go', 'AERO', 333, 333, 333.00, 333.00, 3000);
 
 --Passenger
---INSERT INTO Passenger_table VALUES ('111', 'Fast Flight', 'QTFF', 111, 111, 111.00, 111.00, 5);
+INSERT INTO Passenger_table VALUES ('777', 'Fast Flight', 'QTFF', 111, 111, 111.00, 111.00, 5);
 INSERT INTO Passenger_table VALUES ('222', 'Air Wave', 'AIRW', 222, 222, 222.00, 222.00, 55);
 INSERT INTO Passenger_table VALUES ('333', 'Aero Go', 'AERO', 333, 333, 333.00, 333.00, 555);
 
@@ -153,14 +153,7 @@ WHERE AL.AirlineCode = '3' AND PA.ModelName = '333';
 SELECT AL.AirlineName, AL.Count_planes() AS "No. of Airplanes" FROM Airline_table AL;
 
 
-
-
-
-
-
-
-
-
+select * from Airline_table;
 
 
 
