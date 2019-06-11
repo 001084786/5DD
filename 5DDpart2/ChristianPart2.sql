@@ -1,29 +1,26 @@
 -- ========================== DROP & CREATE TABLES ==========================
 
 -- DROP THE TABLES
+
 DROP TABLE Airplane_table;
-DROP TYPE Airplane;
-
 DROP TABLE Airline_table;
-DROP TYPE Airline;
-
 DROP TABLE Passenger_table;
-DROP TYPE Passenger;
-
 DROP TABLE Cargo_table;
-DROP TYPE Cargo;
-
 DROP TABLE SubModel_table;
-DROP TYPE Submodel;
-
 DROP TABLE Model_table;
-DROP TYPE Model;
+
+DROP TYPE Airplane;
+DROP TYPE Airline;
+DROP TYPE Passenger;
+DROP TYPE Cargo;
+DROP TYPE Submodel;
+DROP TYPE ModelType;
 /
 
 -- CREATE THE Model TABLE
-CREATE TYPE Model AS OBJECT (ModelName VARCHAR2(10), Manufacturer VARCHAR2(20)) NOT FINAL;
+CREATE TYPE ModelType AS OBJECT (ModelName VARCHAR2(10), Manufacturer VARCHAR2(20)) NOT FINAL;
 /
-CREATE TABLE Model_table OF Model;
+CREATE TABLE Model_table OF ModelType;
 
 ALTER TABLE Model_table
   ADD (CONSTRAINT ModelNamePK PRIMARY KEY (ModelName));
@@ -31,7 +28,7 @@ ALTER TABLE Model_table
 
 
 -- CREATE THE SubModel TABLE
-CREATE TYPE SubModel UNDER Model (SubModelName VARCHAR2(10), MaxTakeOffWeight NUMBER(8), CrusingRange NUMBER(8), WingSpan NUMBER(8, 2), Height NUMBER(8, 2)) NOT FINAL;
+CREATE TYPE SubModel UNDER ModelType (SubModelName VARCHAR2(10), MaxTakeOffWeight NUMBER(8), CrusingRange NUMBER(8), WingSpan NUMBER(8, 2), Height NUMBER(8, 2)) NOT FINAL;
 /
 CREATE TABLE SubModel_table OF SubModel;
 
@@ -41,7 +38,7 @@ ALTER TABLE SubModel_table
 
 
 /* CREATE THE Passenger TABLE */
-CREATE TYPE Passenger UNDER SubModel (MaxNoOfPassenger NUMBER(8)) NOT FINAL;
+CREATE TYPE Passenger UNDER SubModel (MaxNoOfPassenger NUMBER(8));
 /
 CREATE TABLE Passenger_table OF Passenger;
 
@@ -57,7 +54,7 @@ CREATE TYPE Airline AS OBJECT (AirlineCode VARCHAR2(8), AirlineName VARCHAR2(25)
 CREATE TABLE Airline_table OF Airline;
 
 -- CREATE THE Airplane TABLE
-CREATE TYPE Airplane AS OBJECT (AirlineRef REF Airline, CargoRef REF Cargo, PassengerRef REF Passenger, AirplaneId NUMBER(8), AirplaneName VARCHAR2(25));
+CREATE TYPE Airplane AS OBJECT (AirplaneId NUMBER(8), AirplaneName VARCHAR2(25), AirlineRef REF Airline, PassengerRef REF Passenger, CargoRef REF Cargo);
 /
 
 ALTER TABLE Airline_table
@@ -71,19 +68,10 @@ ALTER TYPE Airline
 /
 
 
-
-
-DROP TYPE Airplane;
-
-
-
-
-
-
 CREATE TABLE Airplane_table OF Airplane;
 
 AlTER TABLE Airplane_table
-  ADD (CONSTRAINT AirplaneIdPK PRIMARY KEY (AirlineId));
+  ADD (CONSTRAINT AirplaneIdPK PRIMARY KEY (AirplaneId));
 /
 
 
@@ -100,13 +88,12 @@ MEMBER FUNCTION Count_planes RETURN NUMBER IS
   BEGIN
     SELECT COUNT (AP.AirplaneId) INTO x
     FROM Airplane_table AP
-    WHERE DEREF(AP.Airline) = self;
+    WHERE DEREF(AP.AirlineRef) = self;
   RETURN x;
 END Count_planes;
 END;
 /
 
-show error;
 
 
 
@@ -115,7 +102,6 @@ show error;
 
 
 
-/*
 -- ========================== INSERT DATA ==========================
 --Airline
 INSERT INTO Airline_table VALUES ('1', 'SA');
@@ -150,22 +136,21 @@ INSERT INTO Passenger_table VALUES ('333', 'Aero Go', 'AERO', 333, 333, 333.00, 
 INSERT INTO Airplane_table
 SELECT 1, 'Air01', REF(AL), null, REF(CA)
 FROM Airline_table AL, Cargo_table CA
-WHERE AL.AirlineCode = '1' AND CA.ModelName = 'QTFF';
+WHERE AL.AirlineCode = '1' AND CA.ModelName = '111';
 
 INSERT INTO Airplane_table
-SELECT 1, 'Air02', REF(AL), REF(PA), null
+SELECT 2, 'Air02', REF(AL), REF(PA), null
 FROM Airline_table AL, Passenger_table PA
-WHERE AL.AirlineCode = '1' AND PA.ModelName = 'AIRW';
+WHERE AL.AirlineCode = '1' AND PA.ModelName = '222';
 
 INSERT INTO Airplane_table
-SELECT 1, 'Air03', REF(AL), REF(PA), null
+SELECT 3, 'Air03', REF(AL), REF(PA), null
 FROM Airline_table AL, Passenger_table PA
-WHERE AL.AirlineCode = '3' AND PA.ModelName = 'AERO';
+WHERE AL.AirlineCode = '3' AND PA.ModelName = '333';
 
 
 -- COUNT
 SELECT AL.AirlineName, AL.Count_planes() AS "No. of Airplanes" FROM Airline_table AL;
-/
 
 
 
