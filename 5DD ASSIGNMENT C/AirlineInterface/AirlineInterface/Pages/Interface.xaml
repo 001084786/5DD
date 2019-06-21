@@ -5,7 +5,7 @@
     xmlns:local="using:AirlineInterface.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Width="716" Height="950">
+    mc:Ignorable="d" Width="716" Height="1104">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,0,10">
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="65,94,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="196" Header="Airline Code"/>
@@ -39,10 +39,12 @@
         <TextBox x:Name="textBox_Copy15" HorizontalAlignment="Left" Margin="228,714,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="329" />
         <TextBox x:Name="textBox_Copy16" HorizontalAlignment="Left" Margin="562,714,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="110"/>
         <TextBox x:Name="textBox_Copy17" HorizontalAlignment="Left" Margin="476,434,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="196" Header="Technician No"/>
-        <TextBlock x:Name="textBlock1_Copy5" HorizontalAlignment="Left" Margin="68,794,0,0" TextWrapping="Wrap" Text="Technician No: ____________" VerticalAlignment="Top" />
-        <TextBlock x:Name="textBlock1_Copy6" HorizontalAlignment="Left" Margin="68,819,0,0" TextWrapping="Wrap" Text="Date Of Signature: ____________" VerticalAlignment="Top" />
-        <TextBox x:Name="textBox_Copy18" HorizontalAlignment="Left" Margin="343,779,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="329" Header="Previous Test No (If necessary)"/>
-        <Button x:Name="button" Content="Submit" HorizontalAlignment="Left" Margin="461,868,0,0" VerticalAlignment="Top" FontSize="24"/>
+        <TextBlock x:Name="textBlock1_Copy5" HorizontalAlignment="Left" Margin="64,866,0,0" TextWrapping="Wrap" Text="Technician No: ____________" VerticalAlignment="Top" />
+        <TextBlock x:Name="textBlock1_Copy6" HorizontalAlignment="Left" Margin="65,891,0,0" TextWrapping="Wrap" Text="Date Of Signature: ____________" VerticalAlignment="Top" />
+        <TextBox x:Name="textBox_Copy18" HorizontalAlignment="Left" Margin="343,851,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="329" Header="Previous Test No (If necessary)"/>
+        <Button x:Name="button" Content="Submit" HorizontalAlignment="Left" Margin="461,928,0,0" VerticalAlignment="Top" FontSize="24"/>
+        <TextBox x:Name="textBox_Copy19" HorizontalAlignment="Left" Margin="65,768,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="196" Header="Overall Test Result (Pass/Fail)"/>
+        <TextBox x:Name="textBox_Copy20" HorizontalAlignment="Left" Margin="287,768,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="385" Header="Comments"/>
 
     </Grid>
 </Page>
